@@ -3,7 +3,7 @@ group = 'org.xbib.elasticsearch.plugin'
 version = '2.3.2.0'
 
 ext {
-    pluginName = 'decompound'
+    pluginName = 'eudex'
     pluginClassname  = 'org.xbib.elasticsearch.plugin.analysis.phonetic.EudexPlugin'
     pluginDescription = 'Eudex phonetic analysis plugin for Elasticsearch'
     versions = [
