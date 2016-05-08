@@ -15,7 +15,7 @@ This is a Java port of [Eudex](https://github.com/ticki/eudex), which is impleme
 
 ### Elasticsearch 2.x
 
-    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-analysis-decompound/2.3.2.0/elasticsearch-analysis-phonetic-eudex-2.3.2.0-plugin.zip
+    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-analysis-phonetic-eudex/2.3.2.0/elasticsearch-analysis-phonetic-eudex-2.3.2.0-plugin.zip
 
 Do not forget to restart the node after installing.
 

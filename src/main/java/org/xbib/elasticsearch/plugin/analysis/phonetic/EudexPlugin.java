@@ -1,4 +1,4 @@
-package org.xbib.elasticsearch.plugin.analysis.decompound;
+package org.xbib.elasticsearch.plugin.analysis.phonetic;
 
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;

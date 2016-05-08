@@ -46,7 +46,7 @@ import org.elasticsearch.index.settings.IndexSettingsModule;
 import org.elasticsearch.index.similarity.SimilarityLookupService;
 import org.elasticsearch.indices.analysis.IndicesAnalysisService;
 import org.elasticsearch.indices.mapper.MapperRegistry;
-import org.xbib.elasticsearch.plugin.analysis.decompound.EudexPlugin;
+import org.xbib.elasticsearch.plugin.analysis.phonetic.EudexPlugin;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
