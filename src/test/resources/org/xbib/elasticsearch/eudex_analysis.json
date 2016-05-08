@@ -1,0 +1,22 @@
+{
+    "index":{
+        "analysis":{
+            "analyzer":{
+                "my_phonetic":{
+                    "type":"eudex"
+                }
+            },
+            "filter":{
+                "my_phonetic":{
+                    "type":"eudex"
+                }
+            },
+            "tokenizer":{
+                "my_phonetic":{
+                    "type": "standard",
+                    "filter":[ "my_phonetic" ]
+                }
+            }
+        }
+    }
+}
