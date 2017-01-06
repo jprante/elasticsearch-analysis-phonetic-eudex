@@ -1,11 +1,11 @@
-
-group = 'org.xbib.elasticsearch.plugin'
-version = '2.3.2.0'
-
 ext {
     pluginName = 'eudex'
     pluginClassname  = 'org.xbib.elasticsearch.plugin.analysis.phonetic.EudexPlugin'
     pluginDescription = 'Eudex phonetic analysis plugin for Elasticsearch'
+    user = 'jprante'
+    scmUrl = 'https://github.com/' + user + '/' + name
+    scmConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
+    scmDeveloperConnection = 'scm:git:git://github.com/' + user + '/' + name + '.git'
     versions = [
             'elasticsearch' : '2.3.2',
             'log4j': '2.5',
@@ -15,14 +15,10 @@ ext {
 
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 repositories {
     mavenCentral()
-    mavenLocal()
-    jcenter()
-    maven {
-        url "http://xbib.org/repository"
-    }
 }
 
 sourceSets {
@@ -40,7 +36,7 @@ configurations {
     wagon
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
-    releaseJars {
+    distJars {
         extendsFrom runtime
         exclude group: 'org.elasticsearch'
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
@@ -56,6 +52,7 @@ dependencies {
     testCompile "org.apache.logging.log4j:log4j-core:${versions.log4j}"
     integrationTestCompile "junit:junit:${versions.junit}"
     integrationTestCompile "org.elasticsearch:elasticsearch:${versions.elasticsearch}"
+    distJars "${project.group}:${project.name}:${project.version}"
     wagon 'org.apache.maven.wagon:wagon-ssh-external:2.10'
 }
 
@@ -94,17 +91,16 @@ task makePluginDescriptor(type: Copy) {
     ])
 }
 
+
 task buildPluginZip(type: Zip, dependsOn: [':jar', ':makePluginDescriptor']) {
-    from files(libsDir)
-    from configurations.releaseJars
+    from configurations.distJars
     from 'build/tmp/plugin'
     classifier = 'plugin'
 }
 
 task unpackPlugin(type: Copy, dependsOn: [':buildPluginZip']) {
     delete "plugins"
-    from files(libsDir)
-    from configurations.releaseJars
+    from configurations.distJars
     from 'build/tmp/plugin'
     into "plugins/${pluginName}"
 }
@@ -115,7 +111,7 @@ task integrationTest(type: Test, dependsOn: ['unpackPlugin']) {
     classpath += fileTree("plugins/${pluginName}").include('*.jar')
     classpath += sourceSets.integrationTest.output
     // without this trick to remove identical jars from classpath, an Elasticsearch bug whines about a "jar hell"
-    classpath -= configurations.releaseJars
+    classpath -= configurations.distJars
     outputs.upToDateWhen { false }
     systemProperty 'path.home', projectDir.absolutePath
     testLogging.showStandardStreams = false
@@ -127,38 +123,26 @@ check.dependsOn integrationTest
 clean {
     delete "plugins"
 }
+task javadocJar(type: Jar, dependsOn: classes) {
+    from javadoc
+    into 'build/tmp'
+    classifier 'javadoc'
+}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
+    into 'build/tmp'
     classifier 'sources'
 }
 
 artifacts {
-    archives sourcesJar
-    archives buildPluginZip
+    archives javadocJar, sourcesJar, buildPluginZip
 }
 
-uploadArchives {
-    repositories {
-        if (project.hasProperty("xbibUsername")) {
-            mavenDeployer {
-                configuration = configurations.wagon
-                repository(
-                        id: 'xbib.org',
-                        url: uri('scpexe://xbib.org/repository'),
-                        authentication: [userName: xbibUsername, privateKey: xbibPrivateKey]
-                )
-                pom.project {
-                    inceptionYear '2016'
-                    licenses {
-                        license {
-                            name 'The Apache Software License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution 'repo'
-                        }
-                    }
-                }
-            }
-        }
+if (project.hasProperty('signing.keyId')) {
+    signing {
+        sign configurations.archives
     }
 }
+
+apply from: 'gradle/publish.gradle'

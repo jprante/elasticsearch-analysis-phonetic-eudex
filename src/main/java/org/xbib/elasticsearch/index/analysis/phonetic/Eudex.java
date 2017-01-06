@@ -1,5 +1,9 @@
 package org.xbib.elasticsearch.index.analysis.phonetic;
 
+/*
+ * Ported from the original rust implementation by ticki at
+ * https://github.com/ticki/eudex
+ */
 public class Eudex {
 
     private final static int LETTERS = 26;
@@ -156,6 +160,7 @@ public class Eudex {
                 } else if (entry >= 0xDF && entry < 0xFF) {
                     x = PHONES_C1[entry - 0xDF];
                 } else {
+                    b++;
                     continue;
                 }
                 if ((res & 0xFE) != (x & 0xFE)) {
@@ -170,7 +175,11 @@ public class Eudex {
     }
 
     public long distance(String a, String b) {
-        long dist = encode(a) ^ encode(b);
+        return distance(encode(a), encode(b));
+    }
+
+    public long distance(long a, long b) {
+        long dist = a ^ b;
         return Long.bitCount(dist & 0xFF) +
                 Long.bitCount((dist >> 8) & 0xFF) * 2 +
                 Long.bitCount((dist >> 16) & 0xFF) * 4 +
@@ -184,5 +193,4 @@ public class Eudex {
     public boolean similar(String a, String b) {
         return distance(a, b) < 10;
     }
-
 }
