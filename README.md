@@ -9,6 +9,7 @@ This is a Java port of [Eudex](https://github.com/ticki/eudex), which is impleme
 
 | Plugin version   | Elasticsearch version | Release date |
 | -----------------| ----------------------| -------------|
+| 2.3.2.2          | 2.3.2                 | Jan  7 2017  |
 | 2.3.2.1          | 2.3.2                 | Jan  6 2017  |
 | 2.3.2.0          | 2.3.2                 | May  8 2016  |
 
@@ -16,7 +17,7 @@ This is a Java port of [Eudex](https://github.com/ticki/eudex), which is impleme
 
 ### Elasticsearch 2.x
 
-    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-analysis-phonetic-eudex/2.3.2.1/elasticsearch-analysis-phonetic-eudex-2.3.2.1-plugin.zip
+    ./bin/plugin install http://xbib.org/repository/org/xbib/elasticsearch/plugin/elasticsearch-analysis-phonetic-eudex/2.3.2.2/elasticsearch-analysis-phonetic-eudex-2.3.2.2-plugin.zip
 
 Do not forget to restart the node after installing.
 
